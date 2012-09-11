@@ -1,3 +1,8 @@
+<%@page import="java.sql.DriverManager"%>
+<%@page import="javax.servlet.jsp.tagext.TryCatchFinally"%>
+<%@page import="java.sql.ResultSet"%>
+<%@page import="java.sql.Statement"%>
+<%@page import="java.sql.Connection"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ page import="java.io.*"%>
@@ -19,33 +24,67 @@
 	<%
 	    Integer count = 0;
 	    synchronized (lock) {
-	        // 初始化文件名
-	        if (file == null) {
-	            file = new File(application.getRealPath(".")
-	                    + "/WEB-INF/classes/counter.dat");
+	        String dbName = "count";
+	        String user = "root";
+	        String pass = "123";
+	        String host = "localhost";
+	        int port = 3306;
+
+	        String url = "jdbc:mysql://" + host + ":" + port + "/" + dbName;
+
+	        Connection con = null;
+	        Statement stmt = null;
+	        ResultSet rs = null;
+
+	        try {
+	            Class.forName("com.mysql.jdbc.Driver");
+	            con = DriverManager.getConnection(url, user, pass);
+	            String SQL = "select * from tcount";
+	            stmt = con.createStatement();
+	            rs = stmt.executeQuery(SQL);
+
+	            if (rs.next()) {
+	                count = rs.getInt(1);
+	            } else {
+	                count = 0;
+	            }
+// 	            stmt.close();
+	            count++;
+	            //stmt = con.createStatement();
+	             if(count==1){
+	              	stmt.executeUpdate("insert into tcount(count) values(1)");
+	              } else {
+	                  int update = stmt.executeUpdate("update tcount set count="+count);
+	  	            System.out.println("update : "+update);
+	              } 
+	            
+	            
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        } finally {
+	            if (rs != null) {
+	                try {
+	                    rs.close();
+	                } catch (Exception e) {
+	                    e.printStackTrace();
+	                }
+	            }
+	            if (stmt != null) {
+	                try {
+	                    stmt.close();
+	                } catch (Exception e) {
+	                    e.printStackTrace();
+	                }
+	            }
+	            if (con != null) {
+	                try {
+	                    con.close();
+	                } catch (Exception e) {
+	                    e.printStackTrace();
+	                }
+	            }
 	        }
 
-	        // 我们从文件读取数据
-	        // 如果文件不存在，则需要初始化
-	        if (!file.exists()) {
-	            // 创建一个新的文件
-	            file.createNewFile();
-	            count = 0;
-	        } else {
-	            // 准备读取文件
-	            FileReader reader = new FileReader(file);
-	            // 从文件里读取int数据
-	            count = reader.read();
-	            // 关闭文件
-	            reader.close();
-	        }
-	        count++;
-	        // 准备写入文件
-	        FileWriter writer = new FileWriter(file);
-	        // 写入
-	        writer.write(count);
-	        // 关闭文件
-	        writer.close();
 	    }
 	%>
 	当前一共访问次数为:<%=count%>
