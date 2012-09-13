@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="cn.kevin.web.counter.entity">
+
+    <class name="CountEntity" table="tcount">
+        <id name="id" column="id" type="int">
+            <generator class="native"/>
+        </id>
+        <property name="count" type="int" column="count" />
+    </class>
+
+</hibernate-mapping>
