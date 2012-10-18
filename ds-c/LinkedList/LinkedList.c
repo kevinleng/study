@@ -24,7 +24,14 @@ LinkedList* create() {
 }
 
 void destroy(LinkedList* list) {
-	free(list);
+	LinkedList* p = list;
+	LinkedList* q = list->next;
+	while(q){
+		free(p);
+		p = q;
+		q = p->next;
+	}
+	free(p);
 }
 
 void display(LinkedList* list) {
