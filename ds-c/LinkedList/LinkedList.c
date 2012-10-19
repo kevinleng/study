@@ -12,15 +12,15 @@
 #include <string.h>
 #include <stdio.h>
 
-LinkedList* create() {
-	LinkedList* list = malloc(sizeof(LinkedList));
+int create(LinkedList* list) {
+	list = malloc(sizeof(LinkedList));
 	if (list == NULL ) {
 		printf("create LinkedList error.");
-		exit(1);
+		return 0;
 	}
 	list->next = NULL;
 	list->data = NULL;
-	return list;
+	return 1;
 }
 
 void destroy(LinkedList* list) {
@@ -44,43 +44,57 @@ void display(LinkedList* list) {
 	printf("\n");
 }
 
-void insert(LinkedList* list, int pos, ElemType* e) {
+int insert(LinkedList* list, ElemType* e) {
 	LinkedList* p = list;
+	
+	if(p->next !=NULL){
+	    while(p->next) {
+		    p = p->next;
+	    }
+	} 
 
-	int i;
-	for (i = 0; i < pos && p->next; i++) {
-		p = p->next;
+	LinkedList newNode;
+	
+	int create_ret = create(&newNode);
+	if(create_ret){
+	    newNode.data = e;
+	    newNode.next = p->next;
+	    p->next = &newNode;
+	}else {
+	    return 0;
 	}
-
-	LinkedList* newNode = create();
-	newNode->data = e;
-	newNode->next = p->next;
-	p->next = newNode;
+	
 
 }
 
-ElemType* delete(LinkedList* list, int pos) {
+int delete(LinkedList* list, ElemType* e) {
 	LinkedList* p = list;
 
-	int i;
-	for (i = 0; i < pos && p->next; i++) {
-		p = p->next; //待删节点上一节点
-	}
-
-	LinkedList* q = p->next;  //待删节点
-	p->next = q->next;
-	ElemType* ret = q->data;
-	destroy(q);
-	return ret;
+    // 只有一个节点
+    if(p->next==NULL){
+        if(strcmp(p->data, e)==0){
+            list->data = NULL;
+            return 1;   
+        }  else {
+            return 0;
+        }
+    } else {
+        while(p->next) {
+            p = p->next;
+	    }
+    } 
+    
+    
+	return 1;
 }
 
-Status find(LinkedList* list, ElemType* e) {
+int find(LinkedList* list, ElemType* e) {
 	LinkedList* p = list;
-	Status ret = FAIL;
+	int ret = 0;
 	while(p->next){
 		p = p->next;
 		if(!strcmp(p->data, e)){
-			ret = OK;
+			ret = 1;
 			break;
 		}
 	}

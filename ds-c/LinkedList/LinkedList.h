@@ -8,28 +8,25 @@
 #ifndef LINKEDLIST_H_
 #define LINKEDLIST_H_
 
-#define OK 1
-#define FAIL 0
-
 typedef char ElemType;
 typedef int Status;
 
-typedef struct {
+typedef struct LNode{
 	ElemType* data;
-	struct LinkedList* next;
+	struct LNode* next;
 }LinkedList;
 
-LinkedList* create();
+int create(LinkedList* list);
 
 void destroy(LinkedList* list);
 
 void display(LinkedList* list);
 
-void insert(LinkedList* list, int pos, ElemType* e);
+int insert(LinkedList* list, ElemType* e);
 
-ElemType* delete(LinkedList* list, int pos);
+int delete(LinkedList* list, ElemType* e);
 
-Status find(LinkedList* list, ElemType* e);
+int find(LinkedList* list, ElemType* e);
 
 
 
