@@ -23,27 +23,25 @@
 #include <stdio.h>
 
 typedef char ElemType;
-typedef int Status;
 
-typedef struct node{
+typedef struct node {
 	ElemType* data;
 	struct node* next;
 	struct node* prev;
 } DLinkList;
 
-DLinkList* create(xxxx) {
-	DLinkList* list = malloc(sizeof(DLinkList));
-	if (list == NULL) {
+int init(DLinkList* list) {
+	if (list == NULL ) {
 		printf("create DLinkList error.");
-		exit(1);
+		return 1;
 	}
 	list->next = NULL;
 	list->prev = NULL;
 	list->data = NULL;
-	return list;
+	return 0;
 }
 
-void destroy(DLinkList* list, int a) {
+void destroy(DLinkList* list) {
 	DLinkList* p = list;
 	DLinkList* q = list->next;
 	while (q) {
@@ -54,7 +52,7 @@ void destroy(DLinkList* list, int a) {
 	free(p);
 }
 
-void display(DLinkList* list, int ccc) {
+void display(DLinkList* list) {
 	DLinkList* p = list;
 	printf("display list: ");
 	while (p->next) {
@@ -64,41 +62,47 @@ void display(DLinkList* list, int ccc) {
 	printf("\n");
 }
 
-void insert(DLinkList* list, int pos, ElemType* e) {
+void insert(DLinkList* list, ElemType* e) {
 	DLinkList* p = list;
 
-	int i;
-	for (i = 0; i < pos && p->next; i++) {
+	while (p->next) {
 		p = p->next;
 	}
 
-	DLinkList* newNode = create();
+	DLinkList* newNode = (DLinkList*) malloc(sizeof(DLinkList));
 	newNode->data = e;
-	newNode->next = p->next;
-	p->next->prev = newNode;
+	newNode->next = NULL;
 	newNode->prev = p;
 	p->next = newNode;
 
 }
 
-ElemType* delete(DLinkList* list, int pos) {
+int delete(DLinkList* list, ElemType* e) {
 	DLinkList* p = list;
+	while (p->next) {
+		p = p->next;
+		if (!strcmp(p->data, e)) {
+			DLinkList* q = p->prev;
 
-	int i;
-	for (i = 0; i < pos && p->next; i++) {
-		p = p->next; //待删节点上一节点
+			if (p->next == NULL ) {
+				q->next = p->next;
+			} else {
+				q->next = p->next;
+				p->next->prev = q;
+			}
+			free(p);
+
+			return 0;
+		}
+
 	}
 
-	DLinkList* q = p->next; //待删节点
-	p->next = q->next;
-	ElemType* ret = q->data;
-	destroy(q);
-	return ret;
+	return 1;
 }
 
-Status find(DLinkList* list, ElemType* e) {
+int find(DLinkList* list, ElemType* e) {
 	DLinkList* p = list;
-	Status ret = 0;
+	int ret = 0;
 	while (p->next) {
 		p = p->next;
 		if (!strcmp(p->data, e)) {
@@ -110,27 +114,38 @@ Status find(DLinkList* list, ElemType* e) {
 }
 
 int main(void) {
-	DLinkList* list = create();
+	DLinkList* list = (DLinkList*) malloc(sizeof(DLinkList));
+	if (list == NULL ) {
+		printf("malloc error\n");
+		exit(1);
+	}
 
+	init(list);
 	display(list);
 
-	insert(list, 0, "a0");
-	insert(list, 1, "a1");
-	insert(list, 2, "a2");
-	insert(list, 3, "a3");
+	insert(list, "a0");
+	insert(list, "a1");
+	insert(list, "a2");
 	display(list);
 
-	ElemType* d = delete(list, 3);
-	printf("delete %s\n", d);
+	int op;
+	op = find(list, "a0");
+	printf("find a0 ret %d\n", op);
+	op = find(list, "a2");
+	printf("find a2 ret %d\n", op);
+	op = find(list, "ax");
+	printf("find ax ret %d\n", op);
+
+	op = delete(list, "a0");
+	printf("delete a0 ret %d\n", op);
 	display(list);
 
-	Status findRet = find(list, "a1");
-	printf("find status %d\n", findRet);
-	delete(list, 1);
-	findRet = find(list, "a1");
-	printf("find status %d\n", findRet);
-	findRet = find(list, "axx");
-	printf("find status %d\n", findRet);
+	op = delete(list, "a2");
+	printf("delete a2 ret %d\n", op);
+	display(list);
+	op = delete(list, "ax");
+	printf("delete ax ret %d\n", op);
+	display(list);
 
 	destroy(list);
 	return EXIT_SUCCESS;
