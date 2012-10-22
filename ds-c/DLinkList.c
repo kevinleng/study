@@ -43,7 +43,7 @@ DLinkList* create(xxxx) {
 	return list;
 }
 
-void destroy(DLinkList* list) {
+void destroy(DLinkList* list, int a) {
 	DLinkList* p = list;
 	DLinkList* q = list->next;
 	while (q) {
