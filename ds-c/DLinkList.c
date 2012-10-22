@@ -24,14 +24,16 @@
 
 typedef char ElemType;
 
-typedef struct node{
+typedef struct node {
 	ElemType* data;
 	struct node* next;
 	struct node* prev;
 } DLinkList;
 
 int init(DLinkList* list) {
+
 	printf("init list\n");
+
 	list->next = NULL;
 	list->prev = NULL;
 	list->data = NULL;
@@ -60,6 +62,7 @@ void display(DLinkList* list) {
 	printf("\n");
 }
 
+
 int insert(DLinkList* list, ElemType* e) {
 	DLinkList *p = list;
 	while(p->next){
@@ -78,6 +81,9 @@ int insert(DLinkList* list, ElemType* e) {
 	
 	
 	return 0;
+
+
+
 }
 
 int delete(DLinkList* list, ElemType* e) {
@@ -92,6 +98,7 @@ int delete(DLinkList* list, ElemType* e) {
 			free(p);
 			return 0;
 		}
+
 	}
 	
 
@@ -100,7 +107,9 @@ int delete(DLinkList* list, ElemType* e) {
 
 int find(DLinkList* list, ElemType* e) {
 	DLinkList* p = list;
+
 	int ret = 1;
+
 	while (p->next) {
 		p = p->next;
 		if (!strcmp(p->data, e)) {
@@ -112,54 +121,40 @@ int find(DLinkList* list, ElemType* e) {
 }
 
 int main(void) {
-	DLinkList* list = (DLinkList*)malloc(sizeof(DLinkList));
-	if(list==NULL){
-		printf("malloc failed\n");
-		exit(0);
+
+	DLinkList* list = (DLinkList*) malloc(sizeof(DLinkList));
+	if (list == NULL ) {
+		printf("malloc error\n");
+		exit(1);
 	}
-	
+
+	init(list);
+	display(list);
+
+	insert(list, "a0");
+	insert(list, "a1");
+	insert(list, "a2");
+	display(list);
+
 	int op;
-	op=init(list);
-	if(op)
-		printf("init error\n");
+	op = find(list, "a0");
+	printf("find a0 ret %d\n", op);
+	op = find(list, "a2");
+	printf("find a2 ret %d\n", op);
+	op = find(list, "ax");
+	printf("find ax ret %d\n", op);
 
-
+	op = delete(list, "a0");
+	printf("delete a0 ret %d\n", op);
 	display(list);
 
-	if(insert(list, "a0"))
-		printf("insert error\n");
-	if(insert(list, "a1"))
-		printf("insert error\n");
-	if(insert(list, "a2"))
-		printf("insert error\n");
-	if(insert(list, "a3"))
-		printf("insert error\n");
+	op = delete(list, "a2");
+	printf("delete a2 ret %d\n", op);
 	display(list);
-	
-	ElemType* e;
-	e = "a0";
-	if(find(list, e) == 0){
-		printf("find %s\n", e);
-	} else {
-		printf("not find %s\n", e);
-	}
-	
-	e = "a4";
-	if(find(list, e) == 0){
-		printf("find %s\n", e);
-	} else {
-		printf("not find %s\n", e);
-	}
-	
-	e = "a3";
-	
-	if(delete(list, e)){
-		printf("delete %s error\n", e);
-	} else {
-		printf("delete %s success\n", e);
-	}
+	op = delete(list, "ax");
+	printf("delete ax ret %d\n", op);
 	display(list);
-	
+>>>>>>> 4f2bc9431350f4e5f2911f7c72ebc789afeb9304
 
 	destroy(list);
 	return EXIT_SUCCESS;
