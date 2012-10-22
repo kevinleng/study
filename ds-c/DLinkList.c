@@ -31,7 +31,7 @@ typedef struct node{
 	struct node* prev;
 } DLinkList;
 
-DLinkList* create() {
+DLinkList* create(xxxx) {
 	DLinkList* list = malloc(sizeof(DLinkList));
 	if (list == NULL) {
 		printf("create DLinkList error.");
