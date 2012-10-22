@@ -54,7 +54,7 @@ void destroy(DLinkList* list) {
 	free(p);
 }
 
-void display(DLinkList* list) {
+void display(DLinkList* list, int ccc) {
 	DLinkList* p = list;
 	printf("display list: ");
 	while (p->next) {
