@@ -16,6 +16,9 @@
 		printf("%s=>%d\n",#type,sizeof(type)); \
 	}while(0)
 
+void fun(int a[]){
+	printf("fun int[]=%d\n", sizeof(a));
+}
 
 int main(void) {
 	SIZEOF(char);
@@ -25,6 +28,18 @@ int main(void) {
 	SIZEOF(unsigned int);
 	SIZEOF(float);
 	SIZEOF(double);
+	SIZEOF(int *);
+	
+	int a[3] = {1,2,3};
+	int *p = a;
+	SIZEOF(a); 
+	SIZEOF(&a[0]); 
+	SIZEOF(p);
+	int b[5] ;
+	SIZEOF(b);
+	
+	fun(a);
+	fun(b);
 
 	return EXIT_SUCCESS;
 }
